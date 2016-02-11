@@ -192,9 +192,11 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
 }
 
 - (RCTImageLoaderCancellationBlock)loadImageWithTag:(NSString *)imageTag
+                                         bundlePath:(NSString *)bundlePath
                                            callback:(RCTImageLoaderCompletionBlock)callback
 {
   return [self loadImageWithTag:imageTag
+                     bundlePath:bundlePath
                            size:CGSizeZero
                           scale:1
                      resizeMode:RCTResizeModeStretch
@@ -208,6 +210,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
  * the image, or retrieving metadata.
  */
 - (RCTImageLoaderCancellationBlock)loadImageOrDataWithTag:(NSString *)imageTag
+                                               bundlePath:(NSString *)bundlePath
                                                      size:(CGSize)size
                                                     scale:(CGFloat)scale
                                                resizeMode:(RCTResizeMode)resizeMode
@@ -260,6 +263,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
     id<RCTImageURLLoader> loadHandler = [strongSelf imageURLLoaderForURL:request.URL];
     if (loadHandler) {
       cancelLoad = [loadHandler loadImageForURL:request.URL
+                                     bundlePath:bundlePath
                                            size:size
                                           scale:scale
                                      resizeMode:resizeMode
@@ -368,6 +372,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
 }
 
 - (RCTImageLoaderCancellationBlock)loadImageWithTag:(NSString *)imageTag
+                                         bundlePath:(NSString *)bundlePath
                                                size:(CGSize)size
                                               scale:(CGFloat)scale
                                          resizeMode:(RCTResizeMode)resizeMode
@@ -375,6 +380,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
                                     completionBlock:(RCTImageLoaderCompletionBlock)completionBlock
 {
   return [self loadImageWithoutClipping:imageTag
+                             bundlePath:bundlePath
                                    size:size
                                   scale:scale
                              resizeMode:resizeMode
@@ -385,6 +391,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
 }
 
 - (RCTImageLoaderCancellationBlock)loadImageWithoutClipping:(NSString *)imageTag
+                                                 bundlePath:(NSString *)bundlePath
                                                        size:(CGSize)size
                                                       scale:(CGFloat)scale
                                                  resizeMode:(RCTResizeMode)resizeMode
@@ -410,6 +417,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
   };
 
   cancelLoad = [self loadImageOrDataWithTag:imageTag
+                                 bundlePath:bundlePath
                                        size:size
                                       scale:scale
                                  resizeMode:resizeMode
@@ -510,9 +518,11 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
 }
 
 - (RCTImageLoaderCancellationBlock)getImageSize:(NSString *)imageTag
+                                     bundlePath:(NSString *)bundlePath
                                           block:(void(^)(NSError *error, CGSize size))completionBlock
 {
   return [self loadImageOrDataWithTag:imageTag
+                           bundlePath:bundlePath
                                  size:CGSizeZero
                                 scale:1
                            resizeMode:RCTResizeModeStretch
@@ -556,7 +566,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
 - (id)sendRequest:(NSURLRequest *)request withDelegate:(id<RCTURLRequestDelegate>)delegate
 {
   __block RCTImageLoaderCancellationBlock requestToken;
-  requestToken = [self loadImageWithTag:request.URL.absoluteString callback:^(NSError *error, UIImage *image) {
+  requestToken = [self loadImageWithTag:request.URL.absoluteString bundlePath:nil callback:^(NSError *error, UIImage *image) {
     if (error) {
       [delegate URLRequest:requestToken didCompleteWithError:error];
       return;

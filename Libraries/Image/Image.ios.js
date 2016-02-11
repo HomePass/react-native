@@ -68,6 +68,7 @@ var Image = React.createClass({
     source: PropTypes.oneOfType([
       PropTypes.shape({
         uri: PropTypes.string,
+        bundle: PropTypes.string,
       }),
       // Opaque type returned by require('./image.jpg')
       PropTypes.number,
@@ -79,6 +80,7 @@ var Image = React.createClass({
     defaultSource: PropTypes.oneOfType([
       PropTypes.shape({
         uri: PropTypes.string,
+        bundle: PropTypes.string,
       }),
       // Opaque type returned by require('./image.jpg')
       PropTypes.number,
@@ -213,7 +215,7 @@ var Image = React.createClass({
     if (this.context.isInAParentText) {
       RawImage = RCTVirtualImage;
       if (!width || !height) {
-        console.warn('You must specify a width and height for the image %s', uri); 
+        console.warn('You must specify a width and height for the image %s', uri);
       }
     }
 
