@@ -23,6 +23,7 @@ RCT_EXPORT_MODULE()
 }
 
  - (RCTImageLoaderCancellationBlock)loadImageForURL:(NSURL *)imageURL
+                                         bundlePath:(NSString *)bundlePath
                                                size:(CGSize)size
                                               scale:(CGFloat)scale
                                          resizeMode:(RCTResizeMode)resizeMode
@@ -36,7 +37,49 @@ RCT_EXPORT_MODULE()
       return;
     }
     NSString *imageName = RCTBundlePathForURL(imageURL);
-    UIImage *image = [UIImage imageNamed:imageName];
+    NSBundle *targetBundle = [NSBundle mainBundle];
+    
+    if (bundlePath) {
+      NSString *targetBundleName = RCTBundlePathForURL([NSURL URLWithString:bundlePath]);
+      NSString *targetBundleNameWithExtension = [NSString stringWithFormat:@"%@%@", targetBundleName, @".bundle"];
+      NSMutableArray *bundles = [[NSBundle allBundles] mutableCopy];
+      
+      // Get any bundle files included in the mainBundle and add them to the array
+      for (NSString *path in [[NSBundle mainBundle] pathsForResourcesOfType:@"bundle" inDirectory:nil]) {
+        NSBundle *bundle = [NSBundle bundleWithPath:path];
+        
+        if (bundle && ![bundles containsObject:bundle]) {
+          [bundles addObject:bundle];
+        }
+      }
+      
+      // Get any bundle files included and of the frameworks and add them to the array
+      for (NSBundle *framework in [NSBundle allFrameworks]) {
+        for (NSString *path in [framework pathsForResourcesOfType:@"bundle" inDirectory:nil]) {
+          NSBundle *bundle = [NSBundle bundleWithPath:path];
+          
+          if (bundle && ![bundles containsObject:bundle]) {
+            [bundles addObject:bundle];
+          }
+        }
+      }
+      
+      for (NSBundle *bundle in bundles) {
+        NSString *bundleName = bundle.infoDictionary[@"CFBundleName"];
+        
+        // Note: Looks like some frameworks won't have 'infoDictionary' set up correctly
+        if (!bundleName) {
+          bundleName = [bundle.bundleURL lastPathComponent];
+        }
+        
+        if ([bundleName isEqualToString:targetBundleName] || [bundleName isEqualToString:targetBundleNameWithExtension]) {
+          targetBundle = bundle;
+          break;
+        }
+      }
+    }
+    
+    UIImage *image = [UIImage imageNamed:imageName inBundle:targetBundle compatibleWithTraitCollection:nil];
     if (image) {
       if (progressHandler) {
         progressHandler(1, 1);

@@ -57,6 +57,7 @@ typedef void (^RCTImageLoaderCancellationBlock)(void);
  * Can be called from any thread, will call back on an unspecified thread.
  */
 - (RCTImageLoaderCancellationBlock)loadImageWithTag:(NSString *)imageTag
+                                         bundlePath:(NSString *)bundlePath
                                            callback:(RCTImageLoaderCompletionBlock)callback;
 
 /**
@@ -64,6 +65,7 @@ typedef void (^RCTImageLoaderCancellationBlock)(void);
  * select the optimal dimensions for the loaded image.
  */
 - (RCTImageLoaderCancellationBlock)loadImageWithTag:(NSString *)imageTag
+                                         bundlePath:(NSString *)bundlePath
                                                size:(CGSize)size
                                               scale:(CGFloat)scale
                                          resizeMode:(RCTResizeMode)resizeMode
@@ -74,6 +76,7 @@ typedef void (^RCTImageLoaderCancellationBlock)(void);
  * Loads an image without clipping the result to fit - used by RCTImageView.
  */
 - (RCTImageLoaderCancellationBlock)loadImageWithoutClipping:(NSString *)imageTag
+                                                 bundlePath:(NSString *)bundlePath
                                                        size:(CGSize)size
                                                       scale:(CGFloat)scale
                                                  resizeMode:(RCTResizeMode)resizeMode
@@ -96,6 +99,7 @@ typedef void (^RCTImageLoaderCancellationBlock)(void);
  * the information, and won't decode the image if it doesn't have to.
  */
 - (RCTImageLoaderCancellationBlock)getImageSize:(NSString *)imageTag
+                                     bundlePath:(NSString *)bundlePath
                                           block:(void(^)(NSError *error, CGSize size))completionBlock;
 
 @end
@@ -130,6 +134,7 @@ typedef void (^RCTImageLoaderCancellationBlock)(void);
  * applicable.
  */
 - (RCTImageLoaderCancellationBlock)loadImageForURL:(NSURL *)imageURL
+                                        bundlePath:(NSString *)bundlePath
                                               size:(CGSize)size
                                              scale:(CGFloat)scale
                                         resizeMode:(RCTResizeMode)resizeMode

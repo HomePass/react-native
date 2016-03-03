@@ -18,10 +18,11 @@
 
 @implementation RCTImageSource
 
-- (instancetype)initWithURL:(NSURL *)url size:(CGSize)size scale:(CGFloat)scale
+- (instancetype)initWithURL:(NSURL *)url bundleURL:(NSURL *)bundleURL size:(CGSize)size scale:(CGFloat)scale
 {
   if ((self = [super init])) {
     _imageURL  = url;
+    _bundleURL = bundleURL;
     _size = size;
     _scale = scale;
   }
@@ -31,6 +32,7 @@
 - (instancetype)imageSourceWithSize:(CGSize)size scale:(CGFloat)scale
 {
   RCTImageSource *imageSource = [[RCTImageSource alloc] initWithURL:_imageURL
+                                                          bundleURL:_bundleURL
                                                                size:size
                                                               scale:scale];
   imageSource.packagerAsset = _packagerAsset;
@@ -42,8 +44,9 @@
   if (![object isKindOfClass:[RCTImageSource class]]) {
     return NO;
   }
-  return [_imageURL isEqual:object.imageURL] && _scale == object.scale &&
-  (CGSizeEqualToSize(_size, object.size) || CGSizeEqualToSize(object.size, CGSizeZero));
+  BOOL bundleURLEqual = ((_bundleURL == nil && object.bundleURL == nil) || [_bundleURL isEqual:object.bundleURL]);
+  return [_imageURL isEqual:object.imageURL] && bundleURLEqual && _scale == object.scale &&
+    (CGSizeEqualToSize(_size, object.size) || CGSizeEqualToSize(object.size, CGSizeZero));
 }
 
 @end
@@ -57,6 +60,7 @@
   }
 
   NSURL *imageURL;
+  NSURL *bundleURL;
   CGSize size = CGSizeZero;
   CGFloat scale = 1.0;
   BOOL packagerAsset = NO;
@@ -64,6 +68,7 @@
     if (!(imageURL = [self NSURL:RCTNilIfNull(json[@"uri"])])) {
       return nil;
     }
+    bundleURL = [self NSURL:RCTNilIfNull(json[@"bundle"])];
     size = [self CGSize:json];
     scale = [self CGFloat:json[@"scale"]] ?: [self BOOL:json[@"deprecated"]] ? 0.0 : 1.0;
     packagerAsset = [self BOOL:json[@"__packager_asset"]];
@@ -75,6 +80,7 @@
   }
 
   RCTImageSource *imageSource = [[RCTImageSource alloc] initWithURL:imageURL
+                                                          bundleURL:bundleURL
                                                                size:size
                                                               scale:scale];
   imageSource.packagerAsset = packagerAsset;
