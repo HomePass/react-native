@@ -196,8 +196,8 @@ class NavigationHeader extends React.Component<DefaultProps, Props, void> {
 
     return (
       <View style={[ styles.appbar, this.props.style ]}>
-        {scenes.map(this._renderLeftComponent, this)}
         {scenes.map(this._renderTitleComponent, this)}
+        {scenes.map(this._renderLeftComponent, this)}
         {scenes.map(this._renderRightComponent, this)}
       </View>
     );
