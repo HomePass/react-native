@@ -323,7 +323,7 @@ static UIImage *RCTResizeImageIfNeeded(UIImage *image,
     // Check if networking module is available
     if (RCT_DEBUG && ![_bridge respondsToSelector:@selector(networking)]) {
       RCTLogError(@"No suitable image URL loader found for %@. You may need to "
-                  " import the RCTNetworking library in order to load images.",
+                  " import the RCTNetwork library in order to load images.",
                   imageTag);
       return;
     }
