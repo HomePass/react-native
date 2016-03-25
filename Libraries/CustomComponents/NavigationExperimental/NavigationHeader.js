@@ -95,7 +95,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, void> {
 
       return (
         <Animated.View
-          pointerEvents={navigationProps.navigationState.index === index ? 'auto' : 'none'}
+          pointerEvents={navigationProps.navigationState.index === index ? 'box-none' : 'none'}
           key={navigationState.key}
           style={[
             styles.left,
@@ -129,7 +129,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, void> {
 
       return (
         <Animated.View
-          pointerEvents={navigationProps.navigationState.index === index ? 'auto' : 'none'}
+          pointerEvents={navigationProps.navigationState.index === index ? 'box-none' : 'none'}
           key={navigationState.key}
           style={[
             styles.right,
@@ -163,7 +163,7 @@ class NavigationHeader extends React.Component<DefaultProps, Props, void> {
 
       return (
         <Animated.View
-          pointerEvents={navigationProps.navigationState.index === index ? 'auto' : 'none'}
+          pointerEvents={navigationProps.navigationState.index === index ? 'box-none' : 'none'}
           key={navigationState.key}
           style={[
             styles.title,
