@@ -1118,7 +1118,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.internal.uiexplorer.local;
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.react.uiapp;
 				PRODUCT_NAME = UIExplorer;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_CFLAGS = (
@@ -1145,7 +1145,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.internal.uiexplorer.local;
+				PRODUCT_BUNDLE_IDENTIFIER = com.facebook.react.uiapp;
 				PRODUCT_NAME = UIExplorer;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				WARNING_CFLAGS = (
