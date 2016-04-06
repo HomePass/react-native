@@ -54,6 +54,11 @@ module.exports = function(options, isDebuggerConnected) {
         }
       });
       res.end('OK');
+    } else if(req.url.match(new RegExp('file://'))) {
+        fs.readFile(req.url.replace(new RegExp('/file://'), ''), function (err, data) {
+            if(err) console.log(err);
+            res.end(data);
+        })
     } else {
       next();
     }

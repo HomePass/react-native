@@ -15,7 +15,15 @@ var messageHandlers = {
     for (var key in message.inject) {
       self[key] = JSON.parse(message.inject[key]);
     }
-    importScripts(message.url);
+    if(message.url.split(':')[0] === 'file'){
+        var newUrl = 'http://localhost:8081/' + message.url;
+        // loadScript(newUrl, sendReply.bind(null, null));
+        importScripts(newUrl);
+    } else {
+        // loadScript(message.url, sendReply.bind(null, null));
+        importScripts(message.url);
+    }
+    
     sendReply();
   }
 };
