@@ -78,9 +78,6 @@ RCT_EXPORT_MODULE()
   while (!runtimeIsReady && retries > 0) {
     runtimeIsReady = [self prepareJSRuntime];
     retries--;
-    
-    // Delay the next retry by 100ms (when loading a lot of files this might timeout)
-    sleep(100);
   }
   if (!runtimeIsReady) {
     RCTLogError(@"Runtime is not ready for debugging.\n "
