@@ -139,7 +139,7 @@ public class DevSupportManagerImpl implements DevSupportManager {
         if (DevServerHelper.getReloadAppAction(context).equals(action)) {
           if (intent.getBooleanExtra(DevServerHelper.RELOAD_APP_EXTRA_JS_PROXY, false)) {
             mIsUsingJSProxy = true;
-            mDevServerHelper.launchChromeDevtools();
+            mDevServerHelper.launchJSDevtools();
           } else {
             mIsUsingJSProxy = false;
           }
@@ -296,14 +296,29 @@ public class DevSupportManagerImpl implements DevSupportManager {
           }
         });
     options.put(
-        mDevSettings.isElementInspectorEnabled()
-          ? mApplicationContext.getString(R.string.catalyst_element_inspector_off)
-          : mApplicationContext.getString(R.string.catalyst_element_inspector),
+        mApplicationContext.getString(R.string.catalyst_element_inspector),
         new DevOptionHandler() {
           @Override
           public void onOptionSelected() {
             mDevSettings.setElementInspectorEnabled(!mDevSettings.isElementInspectorEnabled());
             mReactInstanceCommandsHandler.toggleElementInspector();
+          }
+        });
+    options.put(
+        mApplicationContext.getString(R.string.catalyst_heap_capture),
+        new DevOptionHandler() {
+          @Override
+          public void onOptionSelected() {
+            try {
+              String heapDumpPath = mApplicationContext.getCacheDir() + "/heapdump.json";
+              JSCHeapCapture.captureHeap(heapDumpPath, 60000);
+              Toast.makeText(
+                mCurrentContext,
+                "Heap captured to " + heapDumpPath,
+                Toast.LENGTH_LONG).show();
+            } catch (JSCHeapCapture.CaptureException e) {
+              showNewJavaError(e.getMessage(), e);
+            }
           }
         });
     options.put(
@@ -584,7 +599,7 @@ public class DevSupportManagerImpl implements DevSupportManager {
   private void reloadJSInProxyMode(final ProgressDialog progressDialog) {
     // When using js proxy, there is no need to fetch JS bundle as proxy executor will do that
     // anyway
-    mDevServerHelper.launchChromeDevtools();
+    mDevServerHelper.launchJSDevtools();
 
     JavaJSExecutor.Factory factory = new JavaJSExecutor.Factory() {
       @Override
