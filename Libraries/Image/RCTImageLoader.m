@@ -675,7 +675,7 @@ RCT_EXPORT_METHOD(prefetchImage:(NSString *)uri
     return;
   }
 
-  [_bridge.imageLoader loadImageWithTag:uri callback:^(NSError *error, UIImage *image) {
+  [_bridge.imageLoader loadImageWithTag:uri bundlePath:nil callback:^(NSError *error, UIImage *image) {
     if (error) {
       reject(RCTErrorPrefetchFailure, nil, error);
       return;
