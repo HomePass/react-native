@@ -16,7 +16,7 @@
 #import "RCTProfile.h"
 #import "RCTUtils.h"
 
-@implementation RCTModuleData
+@implementation RCTModuleData 
 {
   NSDictionary<NSString *, id> *_constantsToExport;
   NSString *_queueName;
@@ -37,15 +37,25 @@
   _instanceLock = [NSLock new];
 
   static IMP objectInitMethod;
+  static SEL setBridgeSelector;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
     objectInitMethod = [NSObject instanceMethodForSelector:@selector(init)];
+    setBridgeSelector = NSSelectorFromString(@"setBridge:");
   });
 
   // If a module overrides `init` then we must assume that it expects to be
   // initialized on the main thread, because it may need to access UIKit.
+#if TARGET_IPHONE_SIMULATOR
+  // Note: If we run the chrome debugger then starting multiple bundles can cause a deadlock if they
+  // don't all run on the main thread
+  _requiresMainThreadSetup =
+  [_moduleClass instancesRespondToSelector:setBridgeSelector] ||
+  (!_instance && [_moduleClass instanceMethodForSelector:@selector(init)] != objectInitMethod);
+#else
   _requiresMainThreadSetup = !_instance &&
   [_moduleClass instanceMethodForSelector:@selector(init)] != objectInitMethod;
+#endif
 
   // If a module overrides `constantsToExport` then we must assume that it
   // must be called on the main thread, because it may need to access UIKit.
