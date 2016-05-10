@@ -13,6 +13,7 @@
 #import "RCTConvert.h"
 #import "RCTEventDispatcher.h"
 #import "RCTLog.h"
+#import "RCTUtils.h"
 
 NSString *const RCTAccessibilityManagerDidUpdateMultiplierNotification = @"RCTAccessibilityManagerDidUpdateMultiplierNotification";
 
@@ -64,14 +65,14 @@ RCT_EXPORT_MODULE()
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveNewContentSizeCategory:)
                                                  name:UIContentSizeCategoryDidChangeNotification
-                                               object:[UIApplication sharedApplication]];
+                                               object:RCTSharedApplication()];
 
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveNewVoiceOverStatus:)
                                                  name:UIAccessibilityVoiceOverStatusChanged
                                                object:nil];
 
-    self.contentSizeCategory = [UIApplication sharedApplication].preferredContentSizeCategory;
+    self.contentSizeCategory = RCTSharedApplication().preferredContentSizeCategory;
     _isVoiceOverEnabled = UIAccessibilityIsVoiceOverRunning();
   }
   return self;

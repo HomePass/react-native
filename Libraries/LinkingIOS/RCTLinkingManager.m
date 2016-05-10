@@ -96,8 +96,13 @@ RCT_EXPORT_METHOD(openURL:(NSURL *)URL
                   resolve:(RCTPromiseResolveBlock)resolve
                   reject:(__unused RCTPromiseRejectBlock)reject)
 {
-  BOOL opened = [RCTSharedApplication() openURL:URL];
-  resolve(@(opened));
+    BOOL opened = NO;
+    
+    if (RCTSharedApplication()) {
+        opened = [RCTSharedApplication() performSelector:@selector(openURL:) withObject:URL];
+    }
+    
+    resolve(@(opened));
 }
 
 RCT_EXPORT_METHOD(canOpenURL:(NSURL *)URL

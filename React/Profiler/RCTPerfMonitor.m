@@ -24,6 +24,7 @@
 #import "RCTPerformanceLogger.h"
 #import "RCTRootView.h"
 #import "RCTUIManager.h"
+#import "RCTUtils.h"
 
 static NSString *const RCTPerfMonitorKey = @"RCTPerfMonitorKey";
 static NSString *const RCTPerfMonitorCellIdentifier = @"RCTPerfMonitorCellIdentifier";
@@ -309,7 +310,7 @@ RCT_EXPORT_MODULE()
 
   [self updateStats];
 
-  UIWindow *window = [UIApplication sharedApplication].delegate.window;
+  UIWindow *window = RCTSharedApplication().delegate.window;
   [window addSubview:self.container];
 
 
