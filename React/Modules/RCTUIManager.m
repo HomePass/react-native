@@ -980,10 +980,12 @@ RCT_EXPORT_METHOD(updateView:(nonnull NSNumber *)reactTag
 RCT_EXPORT_METHOD(focus:(nonnull NSNumber *)reactTag)
 {
   [self addUIBlock:^(__unused RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-    UIView *newResponder = viewRegistry[reactTag];
-    [newResponder reactWillMakeFirstResponder];
-    [newResponder becomeFirstResponder];
-    [newResponder reactDidMakeFirstResponder];
+      dispatch_async(dispatch_get_main_queue(), ^{
+          UIView *newResponder = viewRegistry[reactTag];
+          [newResponder reactWillMakeFirstResponder];
+          [newResponder becomeFirstResponder];
+          [newResponder reactDidMakeFirstResponder];
+      });
   }];
 }
 
