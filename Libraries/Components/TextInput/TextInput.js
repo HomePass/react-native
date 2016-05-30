@@ -366,8 +366,10 @@ var TextInput = React.createClass({
   },
 
   _focusSubscription: (undefined: ?Function),
+  _lastNativeText: (undefined: ?string),
 
   componentDidMount: function() {
+    this._lastNativeText = this.props.value;
     if (!this.context.focusEmitter) {
       if (this.props.autoFocus) {
         this.requestAnimationFrame(this.focus);
@@ -608,20 +610,25 @@ var TextInput = React.createClass({
     this.props.onChangeText && this.props.onChangeText(text);
 
     if (!this.refs.input) {
-      // calling `this.props.onChange` or `this.props.onChangeText`
-      // may clean up the input itself. Exits here.
-      return;
-    }
+        // calling `this.props.onChange` or `this.props.onChangeText`
+        // may clean up the input itself. Exits here.
+        return;
+      }
 
-    // This is necessary in case native updates the text and JS decides
-    // that the update should be ignored and we should stick with the value
-    // that we have in JS.
-    if (text !== this.props.value && typeof this.props.value === 'string') {
-      this.refs.input.setNativeProps({
-        text: this.props.value,
-      });
-    }
-  },
+      this._lastNativeText = text;
+      this.forceUpdate();
+    },
+
+    componentDidUpdate: function () {
+      // This is necessary in case native updates the text and JS decides
+      // that the update should be ignored and we should stick with the value
+      // that we have in JS.
+      if (this._lastNativeText !== this.props.value && typeof this.props.value === 'string') {
+        this.refs.input.setNativeProps({
+          text: this.props.value,
+        });
+      }
+    },
 
   _onBlur: function(event: Event) {
     this.blur();
