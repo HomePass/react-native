@@ -296,6 +296,10 @@ public class EventDispatcher implements LifecycleEventListener {
     public void run() {
       Systrace.beginSection(Systrace.TRACE_TAG_REACT_JAVA_BRIDGE, "DispatchEventsRunnable");
       try {
+        if (mRCTEventEmitter == null) {
+          mRCTEventEmitter = mReactContext.getJSModule(RCTEventEmitter.class);
+        }
+
         Systrace.endAsyncFlow(
             Systrace.TRACE_TAG_REACT_JAVA_BRIDGE,
             "ScheduleDispatchFrameCallback",
