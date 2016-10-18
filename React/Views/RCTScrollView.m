@@ -148,6 +148,7 @@ RCT_NOT_IMPLEMENTED(- (instancetype)init)
 @implementation RCTCustomScrollView
 {
   __weak UIView *_dockedHeaderView;
+  UIRefreshControl *_refreshControl;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
